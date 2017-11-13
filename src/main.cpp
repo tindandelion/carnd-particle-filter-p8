@@ -2,7 +2,7 @@
 #include <iostream>
 #include "json.hpp"
 #include <math.h>
-#include "particle_filter.h"
+#include "particle_filter.hpp"
 
 using namespace std;
 
@@ -44,13 +44,12 @@ int main()
   }
 
   // Create particle filter
-  ParticleFilter pf;
+  ParticleFilter pf(10);
 
   h.onMessage([&pf,&map,&delta_t,&sensor_range,&sigma_pos,&sigma_landmark](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
-    cout << "Message: " << string(data, length) << endl;
     if (length && length > 2 && data[0] == '4' && data[1] == '2') {
       auto s = hasData(std::string(data));
       if (s != "") {
@@ -136,13 +135,11 @@ int main()
       msgJson["best_particle_sense_y"] = pf.getSenseY(best_particle);
 
       auto msg = "42[\"best_particle\"," + msgJson.dump() + "]";
-      std::cout << msg << std::endl;
       ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
 
     }
   } else {
     std::string msg = "42[\"manual\",{}]";
-    cout << msg << endl;
     ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
   }
 }

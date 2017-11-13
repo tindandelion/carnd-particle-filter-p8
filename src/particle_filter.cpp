@@ -15,16 +15,16 @@
 #include <string>
 #include <iterator>
 
-#include "particle_filter.h"
+#include "particle_filter.hpp"
 
 using namespace std;
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
-	// TODO: Set the number of particles. Initialize all particles to first position (based on estimates of 
-	//   x, y, theta and their uncertainties from GPS) and all weights to 1. 
-	// Add random Gaussian noise to each particle.
-	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
-
+  for (int i = 0; i < num_particles; i++) {
+    ModelState init_state = motion_model.init(ModelState(x, y, theta), ModelState(std));
+    particles.push_back(Particle(init_state));
+  }
+  is_initialized = true;
 }
 
 void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate) {
@@ -32,6 +32,10 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	// NOTE: When adding noise you may find std::normal_distribution and std::default_random_engine useful.
 	//  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
 	//  http://www.cplusplus.com/reference/random/default_random_engine/
+  for (int i = 0; i < particles.size(); i++) {
+    Particle& p = particles[i];
+    p.setState(motion_model.predict(p.getState(), delta_t, velocity, yaw_rate, ModelState(std_pos)));
+  }
 
 }
 
