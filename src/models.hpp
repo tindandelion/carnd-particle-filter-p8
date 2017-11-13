@@ -11,10 +11,6 @@ struct ModelState {
 };
 
 class CtrvMotionModel {
-  double sigma_x;
-  double sigma_y;
-  double sigma_theta;
-
 public:
   ModelState init(const ModelState& mean, const ModelState& stddev);
   ModelState predict(const ModelState& current, double delta_t, double vel, double yaw_rate, const ModelState& stddev);
