@@ -54,6 +54,10 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	//   and the following is a good resource for the actual equation to implement (look at equation 
 	//   3.33
 	//   http://planning.cs.uiuc.edu/node99.html
+  for (int i = 0; i < particles.size(); i++) {
+    Particle& p = particles[i];
+    p.weight = observation_model.calculateWeight(p.getState(), observations);
+  }
 }
 
 void ParticleFilter::resample() {

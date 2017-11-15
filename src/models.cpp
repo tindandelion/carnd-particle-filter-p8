@@ -35,3 +35,7 @@ ModelState CtrvMotionModel::predict(const ModelState& cur, double delta_t, doubl
   ModelState new_state(cur.x + dx, cur.y + dy, theta);
   return randomize(new_state, stddev);
 }
+
+double ObservationModel::calculateWeight(const ModelState& state, const std::vector<LandmarkObs>& observations) {
+  return 1.0;
+}

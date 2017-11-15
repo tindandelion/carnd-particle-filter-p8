@@ -43,6 +43,7 @@ class ParticleFilter {
   std::vector<double> weights;
 
   CtrvMotionModel motion_model;
+  ObservationModel observation_model;
 public:
 	
   // Set of current particles
