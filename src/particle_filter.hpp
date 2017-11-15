@@ -49,7 +49,9 @@ public:
   // Set of current particles
   std::vector<Particle> particles;
 
-  ParticleFilter(int num_particles) : num_particles(num_particles), is_initialized(false) {}
+  ParticleFilter(int num_particles, const Map& map):
+    num_particles(num_particles), is_initialized(false),
+    observation_model(ObservationModel(map)) {}
 
   // Destructor
   ~ParticleFilter() {}
