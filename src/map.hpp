@@ -4,19 +4,18 @@
 #include <vector>
 
 class Map {
- public:
+public:
   struct Landmark {
-
-    int id_i ; // Landmark ID
-    float x_f; // Landmark x-position in the map (global coordinates)
-    float y_f; // Landmark y-position in the map (global coordinates)
-    Landmark(int id, float x, float y): id_i(id), x_f(x), y_f(y) {}
+    int id;
+    float x;
+    float y; 
+    Landmark(int id, float x, float y): id(id), x(x), y(y) {}
   };
-
-  std::vector<Landmark> landmark_list ; // List of landmarks in the map
   
   void addLandmark(int id, float x, float y);
   const Landmark& findNearest(float x, float y) const;
+private:
+  std::vector<Landmark> landmarks; 
 };
 
 

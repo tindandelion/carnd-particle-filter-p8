@@ -6,23 +6,23 @@ inline double square(double x) {
 }
 
 inline double distanceTo(const Map::Landmark& landmark, double x, double y) {
-  return sqrt(square(landmark.x_f - x) + square(landmark.y_f - y));
+  return sqrt(square(landmark.x - x) + square(landmark.y - y));
 }
 
 void Map::addLandmark(int id, float x, float y) {
-  landmark_list.push_back(Landmark(id, x, y));
+  landmarks.push_back(Landmark(id, x, y));
 }
 
 const Map::Landmark& Map::findNearest(float x, float y) const {
-  int nearest = -1;
-  double nearestDistance = -1;
+  int nearest = 0;
+  double nearestDistance = distanceTo(landmarks[0], x, y);
 
-  for(int i = 0; i < landmark_list.size(); i++) {
-    double distance = distanceTo(landmark_list[i], x, y);
+  for(int i = 1; i < landmarks.size(); i++) {
+    double distance = distanceTo(landmarks[i], x, y);
     if (distance < nearestDistance) {
       nearestDistance = distance;
       nearest = i;
     }
   }
-  return landmark_list[nearest];
+  return landmarks[nearest];
 }
