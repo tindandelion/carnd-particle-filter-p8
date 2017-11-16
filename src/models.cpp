@@ -65,5 +65,9 @@ void ObservationModel::transformToMapCoordinates(const ModelState& state,
 }
 
 void ObservationModel::associateWithNearestLandmarkOnMap(const vector<LandmarkObs>& observations, vector<LandmarkAssoc>& associations) {
-  
+  for(int i = 0; i < observations.size(); i++) {
+    const LandmarkObs& obs = observations[i];
+    Map::Landmark nearest = map.findNearest(obs.x, obs.y);
+    associations.push_back(LandmarkAssoc(obs, nearest));
+  }
 }

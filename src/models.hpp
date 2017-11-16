@@ -18,11 +18,11 @@ struct ModelState {
 
 class LandmarkAssoc {
   const LandmarkObs& observation;
-  const LandmarkObs& prediction;
+  const Map::Landmark& landmark;
 
 public:
-  LandmarkAssoc(const LandmarkObs& observation, const LandmarkObs& prediction):
-    observation(observation), prediction(prediction) {}
+  LandmarkAssoc(const LandmarkObs& observation, const Map::Landmark& landmark):
+    observation(observation), landmark(landmark) {}
 };
 
 class CtrvMotionModel {
