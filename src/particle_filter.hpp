@@ -49,10 +49,10 @@ public:
   // Set of current particles
   std::vector<Particle> particles;
 
-  ParticleFilter(int num_particles, const Map& map, double motion_stddev[]):
+  ParticleFilter(int num_particles, const Map& map, double motion_stddev[], double observation_stddev[]):
     num_particles(num_particles),
     motion_model(CtrvMotionModel(motion_stddev)),
-    observation_model(ObservationModel(map)) {}
+    observation_model(ObservationModel(map, observation_stddev)) {}
 
   // Destructor
   ~ParticleFilter() {}

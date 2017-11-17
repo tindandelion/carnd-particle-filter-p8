@@ -40,7 +40,7 @@ class ObservationModel {
   void associateWithNearestLandmarkOnMap(const vector<LandmarkObs>& observations, vector<LandmarkAssoc>& associations);
 
 public:
-  ObservationModel(const Map& map): map(map) {}
+  ObservationModel(const Map& map, double stddev[]): map(map) {}
   double calculateWeight(const ModelState& state, const vector<LandmarkObs>& observations);
 };
 
