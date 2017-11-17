@@ -36,8 +36,10 @@ void ParticleFilter::prediction(double delta_t, double velocity, double yaw_rate
 }
 
 void ParticleFilter::updateWeights(double sensor_range, const std::vector<Observation> &observations) {
+  ObservationProcessor op(observations);
   for (Particle& p: particles) {
-    p.weight = observation_model.calculateWeight(p.state, observations);
+    op.convertToMapCoordinates(p.state);
+    p.weight = observation_model.calculateWeight(p.state, op.mapped());
   }
 }
 

@@ -11,6 +11,7 @@
 
 #include "helper_functions.h"
 #include "models.hpp"
+#include "observation_processor.hpp"
 
 struct Particle {
 public:

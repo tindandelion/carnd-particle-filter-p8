@@ -21,20 +21,10 @@ double LandmarkAssoc::calculateWeight(double stddev[]) const {
 }
 
 double ObservationModel::calculateWeight(const VehicleState& state, const vector<Observation>& observations) {
-  vector<Observation> observations_on_map;
   vector<LandmarkAssoc> associations;
 
-  transformToMapCoordinates(state, observations, observations_on_map);
-  associateWithNearestLandmarkOnMap(observations_on_map, associations);
+  associateWithNearestLandmarkOnMap(observations, associations);
   return calculateTotalWeight(associations);
-}
-
-void ObservationModel::transformToMapCoordinates(const VehicleState& state,
-						 const vector<Observation>& observations,
-						 vector<Observation>& result) {
-  for (const Observation& o: observations) {
-    result.push_back(o.toMapCoordinates(state.position, state.theta));
-  }
 }
 
 void ObservationModel::associateWithNearestLandmarkOnMap(const vector<Observation>& observations, vector<LandmarkAssoc>& associations) {
