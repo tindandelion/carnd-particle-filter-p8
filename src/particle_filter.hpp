@@ -13,28 +13,20 @@
 #include "models.hpp"
 
 struct Particle {
+public:
   int id;
-  double x;
-  double y;
-  double theta;
+  VehicleState state;
   double weight;
-  std::vector<int> associations;
+  std::vector<int> associations;  
   std::vector<double> sense_x;
   std::vector<double> sense_y;
 
-  Particle() {}
-  Particle(const VehicleState& init_state):
-    x(init_state.x()), y(init_state.y()), theta(init_state.theta), weight(1) {}
+  Particle(): state(VehicleState(CartesianPoint(0, 0), 0)), weight(0) {}
+  Particle(const VehicleState& init_state): state(init_state), weight(1) {}
 
-  void setState(const VehicleState& state) {
-    x = state.x();
-    y = state.y();
-    theta = state.theta;
-  }
-
-  VehicleState getState() const {
-    return VehicleState(CartesianPoint(x, y), theta);
-  }
+  double x() const { return state.position.x; }
+  double y() const { return state.position.y; }
+  double theta() const { return state.theta; }
 };
 
 class ParticleFilter {

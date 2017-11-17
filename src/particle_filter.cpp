@@ -20,24 +20,23 @@
 using namespace std;
 
 void ParticleFilter::init(double x, double y, double theta) {
+  VehicleState init_state = VehicleState(CartesianPoint(x, y), theta);
   for (int i = 0; i < num_particles; i++) {
-    VehicleState init_state = motion_model.init(VehicleState(CartesianPoint(x, y), theta));
-    particles.push_back(Particle(init_state));
+    VehicleState state = init_state.addGaussianNoise(motion_model.stddev);
+    particles.push_back(Particle(state));
   }
   is_initialized = true;
 }
 
 void ParticleFilter::prediction(double delta_t, double velocity, double yaw_rate) {
-  for (int i = 0; i < particles.size(); i++) {
-    Particle& p = particles[i];
-    p.setState(motion_model.predict(p.getState(), delta_t, velocity, yaw_rate));
+  for (Particle& p: particles) {
+    p.state = motion_model.predict(p.state, delta_t, velocity, yaw_rate);    
   }
 }
 
 void ParticleFilter::updateWeights(double sensor_range, const std::vector<Observation> &observations) {
-  for (int i = 0; i < particles.size(); i++) {
-    Particle& p = particles[i];
-    p.weight = observation_model.calculateWeight(p.getState(), observations);
+  for (Particle& p: particles) {
+    p.weight = observation_model.calculateWeight(p.state, observations);
   }
 }
 

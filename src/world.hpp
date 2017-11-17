@@ -9,6 +9,7 @@ struct CartesianPoint {
   double x;
   double y;
 
+  CartesianPoint(): x(0), y(0) {}
   CartesianPoint(double x, double y): x(x), y(y) {}
   
   double distance(const CartesianPoint& other) const {
@@ -48,6 +49,8 @@ struct VehicleState {
 
   double x() const { return position.x; }
   double y() const { return position.y; }
+  VehicleState addGaussianNoise(const VehicleState& stddev) const;
+  VehicleState move(double delta_t, double vel, double yaw_rate) const;
 };
 
 struct Landmark {

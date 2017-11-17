@@ -5,20 +5,6 @@
 
 using std::vector;
 
-std::default_random_engine random_gen;
-
-inline double gauss(double mean, double stddev) {
-  std::normal_distribution<double> dist(mean, stddev);
-  return dist(random_gen);
-}
-
-inline CartesianPoint randomize(const CartesianPoint& mean, const CartesianPoint& stddev) {
-  return CartesianPoint(gauss(mean.x, stddev.x), gauss(mean.y, stddev.y));
-}
-
-VehicleState randomize(const VehicleState& mean, const VehicleState& stddev) {
-  return VehicleState(randomize(mean.position, stddev.position), gauss(mean.theta, stddev.theta));
-}
 
 inline double calculateWeight(const CartesianPoint& observed_value,
 			      const CartesianPoint& true_value,
@@ -34,28 +20,9 @@ double LandmarkAssoc::calculateWeight(double stddev[]) const {
   return ::calculateWeight(observation.position, landmark.position, sigma);
 }
 
-
-
-
-VehicleState CtrvMotionModel::init(const VehicleState& mean) {
-  return randomize(mean, stddev);
-}
-
 VehicleState CtrvMotionModel::predict(const VehicleState& cur, double delta_t, double vel, double yaw_rate) {
-  double dx = 0, dy = 0;
-  double theta = cur.theta + yaw_rate*delta_t;
-  
-  if (fabs(yaw_rate) < 1e-4) {
-    dx = vel * cos(cur.theta) * delta_t;
-    dy = vel * sin(cur.theta) * delta_t;
-  } else {
-    dx = vel/yaw_rate * (sin(theta) - sin(cur.theta));
-    dy = vel/yaw_rate * (-cos(theta) + cos(cur.theta));
-  }
-
-  CartesianPoint new_position = cur.position.translate(dx, dy);
-  VehicleState new_state(new_position, theta);
-  return randomize(new_state, stddev);
+  VehicleState new_state = cur.move(delta_t, vel, yaw_rate);
+  return new_state.addGaussianNoise(stddev);
 }
 
 double ObservationModel::calculateWeight(const VehicleState& state, const vector<Observation>& observations) {

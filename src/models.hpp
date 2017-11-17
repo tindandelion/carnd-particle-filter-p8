@@ -17,10 +17,9 @@ public:
 };
 
 class CtrvMotionModel {
-  VehicleState stddev;
 public:
+  VehicleState stddev;
   CtrvMotionModel(double stddev[]): stddev(stddev) { }
-  VehicleState init(const VehicleState& mean);
   VehicleState predict(const VehicleState& current, double delta_t, double vel, double yaw_rate);
 };
 
