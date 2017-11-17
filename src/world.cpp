@@ -8,12 +8,11 @@ inline double gauss(double mean, double stddev) {
   return dist(random_gen);
 }
 
-
-VehicleState VehicleState::addGaussianNoise(const VehicleState& stddev) const {
+VehicleState VehicleState::addGaussianNoise(const double* stddev) const {
   CartesianPoint new_position;
-  new_position.x = gauss(position.x, stddev.position.x);
-  new_position.y = gauss(position.y, stddev.position.y);
-  double new_theta = gauss(theta, stddev.theta);
+  new_position.x = gauss(position.x, stddev[0]);
+  new_position.y = gauss(position.y, stddev[1]);
+  double new_theta = gauss(theta, stddev[2]);
   return VehicleState(new_position, new_theta);
 }
 

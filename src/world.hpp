@@ -49,7 +49,7 @@ struct VehicleState {
 
   double x() const { return position.x; }
   double y() const { return position.y; }
-  VehicleState addGaussianNoise(const VehicleState& stddev) const;
+  VehicleState addGaussianNoise(const double* stddev) const;
   VehicleState move(double delta_t, double vel, double yaw_rate) const;
 };
 

@@ -22,8 +22,8 @@ public:
   std::vector<double> sense_y;
 
   Particle(): state(VehicleState(CartesianPoint(0, 0), 0)), weight(0) {}
-  Particle(const VehicleState& init_state): state(init_state), weight(1) {}
-
+  Particle(const VehicleState& init_state): state(init_state), weight(1.0) {};
+  
   double x() const { return state.position.x; }
   double y() const { return state.position.y; }
   double theta() const { return state.theta; }
@@ -34,7 +34,7 @@ class ParticleFilter {
   int num_particles; 
   std::vector<double> weights;
 
-  VehicleState motion_stddev;
+  const double* motion_stddev;
   ObservationModel observation_model;
 public:
 	
