@@ -23,6 +23,7 @@ class LandmarkAssoc {
 public:
   LandmarkAssoc(const LandmarkObs& observation, const Map::Landmark& landmark):
     observation(observation), landmark(landmark) {}
+  double calculateWeight(double stddev[]) const;
 };
 
 class CtrvMotionModel {
@@ -35,12 +36,13 @@ public:
 
 class ObservationModel {
   const Map& map;
+  double* stddev;
   
   void transformToMapCoordinates(const ModelState& state, const vector<LandmarkObs>& observations, vector<LandmarkObs>& result);
   void associateWithNearestLandmarkOnMap(const vector<LandmarkObs>& observations, vector<LandmarkAssoc>& associations);
-
+  double calculateTotalWeight(const vector<LandmarkAssoc>& associations);
 public:
-  ObservationModel(const Map& map, double stddev[]): map(map) {}
+  ObservationModel(const Map& map, double stddev[]): map(map), stddev(stddev) {}
   double calculateWeight(const ModelState& state, const vector<LandmarkObs>& observations);
 };
 

@@ -7,15 +7,28 @@ using std::vector;
 
 std::default_random_engine random_gen;
 
-double gauss(double mean, double stddev) {
+inline double gauss(double mean, double stddev) {
   std::normal_distribution<double> dist(mean, stddev);
   return dist(random_gen);
+}
+
+inline double square(double x) {
+  return x * x;
 }
 
 ModelState randomize(const ModelState& mean, const ModelState& stddev) {
   return ModelState(gauss(mean.x, stddev.x),
 		    gauss(mean.y, stddev.y),
 		    gauss(mean.theta, stddev.theta));
+}
+
+double LandmarkAssoc::calculateWeight(double stddev[]) const {
+  double sigma_x = stddev[0], sigma_y = stddev[1];
+  double scale_factor = 1 / (2 * M_PI * sigma_x * sigma_y);
+  double xx = square(observation.x - landmark.x) / (2 * square(sigma_x));
+  double yy = square(observation.y - landmark.y) / (2 * square(sigma_y));
+    
+  return scale_factor * exp(-(xx + yy));
 }
 
 LandmarkObs ModelState::transformToMapCoordinates(const LandmarkObs& observation) const {
@@ -52,8 +65,7 @@ double ObservationModel::calculateWeight(const ModelState& state, const vector<L
 
   transformToMapCoordinates(state, observations, observations_on_map);
   associateWithNearestLandmarkOnMap(observations_on_map, associations);
-  
-  return 1.0;
+  return calculateTotalWeight(associations);
 }
 
 void ObservationModel::transformToMapCoordinates(const ModelState& state,
@@ -71,3 +83,12 @@ void ObservationModel::associateWithNearestLandmarkOnMap(const vector<LandmarkOb
     associations.push_back(LandmarkAssoc(obs, nearest));
   }
 }
+
+double ObservationModel::calculateTotalWeight(const vector<LandmarkAssoc>& associations) {
+  double total = 1.0;
+  for (int i = 0; i < associations.size(); i++) {
+    total *= associations[i].calculateWeight(stddev);
+  }
+  return total;
+}
+
