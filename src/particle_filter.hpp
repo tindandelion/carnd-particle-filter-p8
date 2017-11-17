@@ -81,7 +81,7 @@ public:
    * @param sensor_range Range [m] of sensor
    * @param observations Vector of landmark observations
    */
-  void updateWeights(double sensor_range, const std::vector<LandmarkObs> &observations);
+  void updateWeights(double sensor_range, const std::vector<Observation> &observations);
 	
   /**
    * resample Resamples from the updated set of particles to form

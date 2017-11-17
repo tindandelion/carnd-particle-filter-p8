@@ -178,7 +178,7 @@ inline bool read_gt_data(std::string filename, std::vector<ground_truth>& gt) {
  * @param filename Name of file containing landmark observation measurements.
  * @output True if opening and reading file was successful
  */
-inline bool read_landmark_data(std::string filename, std::vector<LandmarkObs>& observations) {
+inline bool read_landmark_data(std::string filename, std::vector<Observation>& observations) {
 
   // Get file of landmark measurements:
   std::ifstream in_file_obs(filename.c_str(),std::ifstream::in);
@@ -203,12 +203,7 @@ inline bool read_landmark_data(std::string filename, std::vector<LandmarkObs>& o
     iss_obs >> local_y;
 
     // Declare single landmark measurement:
-    LandmarkObs meas;
-
-    // Set values
-    meas.x = local_x;
-    meas.y = local_y;
-
+    Observation meas(CartesianPoint(local_x, local_y));
     // Add to list of control measurements:
     observations.push_back(meas);
   }

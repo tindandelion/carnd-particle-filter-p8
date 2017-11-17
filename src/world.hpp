@@ -5,15 +5,6 @@
 #include <vector>
 #include "math_helpers.hpp"
 
-/*
- * Struct representing one landmark observation measurement.
- */
-struct LandmarkObs {
-  int id;				// Id of matching landmark in the map.
-  double x;			// Local (vehicle coordinates) x position of landmark observation [m]
-  double y;			// Local (vehicle coordinates) y position of landmark observation [m]
-};
-
 struct CartesianPoint {
   double x;
   double y;
@@ -27,6 +18,25 @@ struct CartesianPoint {
   CartesianPoint translate(double dx, double dy) const {
     return CartesianPoint(x + dx, y + dy);
   }
+
+  CartesianPoint translate(const CartesianPoint& origin) const {
+    return CartesianPoint(x + origin.x, y + origin.y);
+  }
+
+  CartesianPoint rotate(double angle) const {
+    double x_new = x * cos(angle) - y * sin(angle);
+    double y_new = x * sin(angle) + y * cos(angle);
+    return CartesianPoint(x_new, y_new);
+  }
+};
+
+struct Observation {
+  CartesianPoint position;
+  
+  Observation(const CartesianPoint& position): position(position) { }
+  Observation toMapCoordinates(const CartesianPoint& origin, double theta) const {
+    return Observation(position.rotate(theta).translate(origin));
+  }
 };
 
 struct VehicleState {
@@ -38,17 +48,13 @@ struct VehicleState {
 
   double x() const { return position.x; }
   double y() const { return position.y; }
-  LandmarkObs transformToMapCoordinates(const LandmarkObs& observation) const;
 };
 
 struct Landmark {
-  CartesianPoint position;
   int id;
+  CartesianPoint position;
 
   Landmark(int id, const CartesianPoint& position): id(id), position(position) {}
-  
-  double x() const { return position.x; }
-  double y() const { return position.y; }
 };
 
 class Map {
@@ -57,7 +63,6 @@ public:
   void addLandmark(int id, const CartesianPoint& position) { landmarks.push_back(Landmark(id, position));};
   const Landmark& findNearest(const CartesianPoint& point) const;
 };
-
 
 
 #endif 
