@@ -21,7 +21,7 @@ using namespace std;
 
 void ParticleFilter::init(double x, double y, double theta) {
   for (int i = 0; i < num_particles; i++) {
-    ModelState init_state = motion_model.init(ModelState(CartesianPoint(x, y), theta));
+    VehicleState init_state = motion_model.init(VehicleState(CartesianPoint(x, y), theta));
     particles.push_back(Particle(init_state));
   }
   is_initialized = true;

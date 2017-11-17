@@ -5,7 +5,7 @@
 #include <fstream>
 #include <math.h>
 #include <vector>
-#include "map.hpp"
+#include "world.hpp"
 
 // for portability of M_PI (Vis Studio, MinGW, etc.)
 #ifndef M_PI
@@ -32,16 +32,6 @@ struct ground_truth {
 };
 
 /*
- * Struct representing one landmark observation measurement.
- */
-struct LandmarkObs {
-	
-  int id;				// Id of matching landmark in the map.
-  double x;			// Local (vehicle coordinates) x position of landmark observation [m]
-  double y;			// Local (vehicle coordinates) y position of landmark observation [m]
-};
-
-/*
  * Computes the Euclidean distance between two 2D points.
  * @param (x1,y1) x and y coordinates of first point
  * @param (x2,y2) x and y coordinates of second point
@@ -51,9 +41,6 @@ inline double dist(double x1, double y1, double x2, double y2) {
   return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }
 
-inline double square(double x) {
-  return x * x;
-}
 
 inline double * getError(double gt_x, double gt_y, double gt_theta, double pf_x, double pf_y, double pf_theta) {
   static double error[3];
@@ -96,7 +83,7 @@ inline bool read_map_data(std::string filename, Map& map) {
     iss_map >> landmark_y_f;
     iss_map >> id_i;
 
-    map.addLandmark(id_i, landmark_x_f, landmark_y_f);
+    map.addLandmark(id_i, CartesianPoint(landmark_x_f, landmark_y_f));
   }
   return true;
 }

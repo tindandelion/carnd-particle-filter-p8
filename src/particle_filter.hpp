@@ -23,17 +23,17 @@ struct Particle {
   std::vector<double> sense_y;
 
   Particle() {}
-  Particle(const ModelState& init_state):
+  Particle(const VehicleState& init_state):
     x(init_state.x()), y(init_state.y()), theta(init_state.theta), weight(1) {}
 
-  void setState(const ModelState& state) {
+  void setState(const VehicleState& state) {
     x = state.x();
     y = state.y();
     theta = state.theta;
   }
 
-  ModelState getState() const {
-    return ModelState(CartesianPoint(x, y), theta);
+  VehicleState getState() const {
+    return VehicleState(CartesianPoint(x, y), theta);
   }
 };
 
