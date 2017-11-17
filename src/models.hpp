@@ -1,18 +1,21 @@
 #ifndef __MODELS_H
 #define __MODELS_H
 
+#include "world.hpp"
 #include "helper_functions.h"
 
 using std::vector;
 
 struct ModelState {
-  double x;
-  double y;
+public:
+  CartesianPoint position;
   double theta;
 
-  ModelState(double x, double y, double theta): x(x), y(y), theta(theta) {}
-  ModelState(double values[]): x(values[0]), y(values[1]), theta(values[3]) {}
-  
+  ModelState(const CartesianPoint& position, double yaw_angle): position(position), theta(yaw_angle) {}
+  ModelState(double values[]): position(CartesianPoint(values[0], values[1])), theta(values[3]) {}
+
+  double x() const { return position.x; }
+  double y() const { return position.y; }
   LandmarkObs transformToMapCoordinates(const LandmarkObs& observation) const;
 };
 

@@ -12,10 +12,12 @@ inline double gauss(double mean, double stddev) {
   return dist(random_gen);
 }
 
+inline CartesianPoint randomize(const CartesianPoint& mean, const CartesianPoint& stddev) {
+  return CartesianPoint(gauss(mean.x, stddev.x), gauss(mean.y, stddev.y));
+}
+
 ModelState randomize(const ModelState& mean, const ModelState& stddev) {
-  return ModelState(gauss(mean.x, stddev.x),
-		    gauss(mean.y, stddev.y),
-		    gauss(mean.theta, stddev.theta));
+  return ModelState(randomize(mean.position, stddev.position), gauss(mean.theta, stddev.theta));
 }
 
 double LandmarkAssoc::calculateWeight(double stddev[]) const {
@@ -30,8 +32,8 @@ double LandmarkAssoc::calculateWeight(double stddev[]) const {
 LandmarkObs ModelState::transformToMapCoordinates(const LandmarkObs& observation) const {
   LandmarkObs transformed;
   transformed.id = observation.id;
-  transformed.x = x + observation.x * cos(theta) - observation.y * sin(theta);
-  transformed.y = y + observation.x * sin(theta) + observation.y * cos(theta);
+  transformed.x = position.x + observation.x * cos(theta) - observation.y * sin(theta);
+  transformed.y = position.y + observation.x * sin(theta) + observation.y * cos(theta);
   return transformed;
 }
 
@@ -51,7 +53,8 @@ ModelState CtrvMotionModel::predict(const ModelState& cur, double delta_t, doubl
     dy = vel/yaw_rate * (-cos(theta) + cos(cur.theta));
   }
 
-  ModelState new_state(cur.x + dx, cur.y + dy, theta);
+  CartesianPoint new_position = cur.position.translate(dx, dy);
+  ModelState new_state(new_position, theta);
   return randomize(new_state, stddev);
 }
 

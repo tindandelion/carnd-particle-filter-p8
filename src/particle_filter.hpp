@@ -24,16 +24,16 @@ struct Particle {
 
   Particle() {}
   Particle(const ModelState& init_state):
-    x(init_state.x), y(init_state.y), theta(init_state.theta), weight(1) {}
+    x(init_state.x()), y(init_state.y()), theta(init_state.theta), weight(1) {}
 
   void setState(const ModelState& state) {
-    x = state.x;
-    y = state.y;
+    x = state.x();
+    y = state.y();
     theta = state.theta;
   }
 
   ModelState getState() const {
-    return ModelState(x, y, theta);
+    return ModelState(CartesianPoint(x, y), theta);
   }
 };
 
