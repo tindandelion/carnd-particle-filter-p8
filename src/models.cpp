@@ -12,10 +12,6 @@ inline double gauss(double mean, double stddev) {
   return dist(random_gen);
 }
 
-inline double square(double x) {
-  return x * x;
-}
-
 ModelState randomize(const ModelState& mean, const ModelState& stddev) {
   return ModelState(gauss(mean.x, stddev.x),
 		    gauss(mean.y, stddev.y),
