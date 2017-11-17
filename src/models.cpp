@@ -20,11 +20,6 @@ double LandmarkAssoc::calculateWeight(double stddev[]) const {
   return ::calculateWeight(observation.position, landmark.position, sigma);
 }
 
-VehicleState CtrvMotionModel::predict(const VehicleState& cur, double delta_t, double vel, double yaw_rate) {
-  VehicleState new_state = cur.move(delta_t, vel, yaw_rate);
-  return new_state.addGaussianNoise(stddev);
-}
-
 double ObservationModel::calculateWeight(const VehicleState& state, const vector<Observation>& observations) {
   vector<Observation> observations_on_map;
   vector<LandmarkAssoc> associations;

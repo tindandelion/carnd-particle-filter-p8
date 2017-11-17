@@ -22,7 +22,7 @@ using namespace std;
 void ParticleFilter::init(double x, double y, double theta) {
   VehicleState init_state = VehicleState(CartesianPoint(x, y), theta);
   for (int i = 0; i < num_particles; i++) {
-    VehicleState state = init_state.addGaussianNoise(motion_model.stddev);
+    VehicleState state = init_state.addGaussianNoise(motion_stddev);
     particles.push_back(Particle(state));
   }
   is_initialized = true;
@@ -30,7 +30,8 @@ void ParticleFilter::init(double x, double y, double theta) {
 
 void ParticleFilter::prediction(double delta_t, double velocity, double yaw_rate) {
   for (Particle& p: particles) {
-    p.state = motion_model.predict(p.state, delta_t, velocity, yaw_rate);    
+    VehicleState new_state = p.state.move(delta_t, velocity, yaw_rate);
+    p.state = new_state.addGaussianNoise(motion_stddev);
   }
 }
 

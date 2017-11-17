@@ -34,7 +34,7 @@ class ParticleFilter {
   int num_particles; 
   std::vector<double> weights;
 
-  CtrvMotionModel motion_model;
+  VehicleState motion_stddev;
   ObservationModel observation_model;
 public:
 	
@@ -43,7 +43,7 @@ public:
 
   ParticleFilter(int num_particles, const Map& map, double motion_stddev[], double observation_stddev[]):
     num_particles(num_particles),
-    motion_model(CtrvMotionModel(motion_stddev)),
+    motion_stddev(motion_stddev),
     observation_model(ObservationModel(map, observation_stddev)) {}
 
   // Destructor

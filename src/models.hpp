@@ -16,13 +16,6 @@ public:
   double calculateWeight(double stddev[]) const;
 };
 
-class CtrvMotionModel {
-public:
-  VehicleState stddev;
-  CtrvMotionModel(double stddev[]): stddev(stddev) { }
-  VehicleState predict(const VehicleState& current, double delta_t, double vel, double yaw_rate);
-};
-
 class ObservationModel {
   const Map& map;
   double* stddev;
