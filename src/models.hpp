@@ -26,9 +26,11 @@ public:
 };
 
 class CtrvMotionModel {
+  ModelState stddev;
 public:
-  ModelState init(const ModelState& mean, const ModelState& stddev);
-  ModelState predict(const ModelState& current, double delta_t, double vel, double yaw_rate, const ModelState& stddev);
+  CtrvMotionModel(double stddev[]): stddev(stddev) { }
+  ModelState init(const ModelState& mean);
+  ModelState predict(const ModelState& current, double delta_t, double vel, double yaw_rate);
 };
 
 class ObservationModel {

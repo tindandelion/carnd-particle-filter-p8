@@ -19,18 +19,18 @@
 
 using namespace std;
 
-void ParticleFilter::init(double x, double y, double theta, double std[]) {
+void ParticleFilter::init(double x, double y, double theta) {
   for (int i = 0; i < num_particles; i++) {
-    ModelState init_state = motion_model.init(ModelState(x, y, theta), ModelState(std));
+    ModelState init_state = motion_model.init(ModelState(x, y, theta));
     particles.push_back(Particle(init_state));
   }
   is_initialized = true;
 }
 
-void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate) {
+void ParticleFilter::prediction(double delta_t, double velocity, double yaw_rate) {
   for (int i = 0; i < particles.size(); i++) {
     Particle& p = particles[i];
-    p.setState(motion_model.predict(p.getState(), delta_t, velocity, yaw_rate, ModelState(std_pos)));
+    p.setState(motion_model.predict(p.getState(), delta_t, velocity, yaw_rate));
   }
 }
 

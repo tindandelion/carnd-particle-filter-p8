@@ -38,8 +38,8 @@ struct Particle {
 };
 
 class ParticleFilter {
+  bool is_initialized = false;
   int num_particles; 
-  bool is_initialized;
   std::vector<double> weights;
 
   CtrvMotionModel motion_model;
@@ -49,8 +49,9 @@ public:
   // Set of current particles
   std::vector<Particle> particles;
 
-  ParticleFilter(int num_particles, const Map& map):
-    num_particles(num_particles), is_initialized(false),
+  ParticleFilter(int num_particles, const Map& map, double motion_stddev[]):
+    num_particles(num_particles),
+    motion_model(CtrvMotionModel(motion_stddev)),
     observation_model(ObservationModel(map)) {}
 
   // Destructor
@@ -62,21 +63,17 @@ public:
    * @param x Initial x position [m] (simulated estimate from GPS)
    * @param y Initial y position [m]
    * @param theta Initial orientation [rad]
-   * @param std[] Array of dimension 3 [standard deviation of x [m], standard deviation of y [m]
-   *   standard deviation of yaw [rad]]
    */
-  void init(double x, double y, double theta, double std[]);
+  void init(double x, double y, double theta);
 
   /**
    * prediction Predicts the state for the next time step
    *   using the process model.
    * @param delta_t Time between time step t and t+1 in measurements [s]
-   * @param std_pos[] Array of dimension 3 [standard deviation of x [m], standard deviation of y [m]
-   *   standard deviation of yaw [rad]]
    * @param velocity Velocity of car from t to t+1 [m/s]
    * @param yaw_rate Yaw rate of car from t to t+1 [rad/s]
    */
-  void prediction(double delta_t, double std_pos[], double velocity, double yaw_rate);
+  void prediction(double delta_t, double velocity, double yaw_rate);
 	
   /**
    * dataAssociation Finds which observations correspond to which landmarks (likely by using

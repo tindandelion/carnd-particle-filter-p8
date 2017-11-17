@@ -26,11 +26,11 @@ LandmarkObs ModelState::transformToMapCoordinates(const LandmarkObs& observation
   return transformed;
 }
 
-ModelState CtrvMotionModel::init(ModelState const& mean, ModelState const& stddev) {
+ModelState CtrvMotionModel::init(const ModelState& mean) {
   return randomize(mean, stddev);
 }
 
-ModelState CtrvMotionModel::predict(const ModelState& cur, double delta_t, double vel, double yaw_rate, const ModelState& stddev) {
+ModelState CtrvMotionModel::predict(const ModelState& cur, double delta_t, double vel, double yaw_rate) {
   double dx = 0, dy = 0;
   double theta = cur.theta + yaw_rate*delta_t;
   
