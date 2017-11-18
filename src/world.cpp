@@ -8,6 +8,13 @@ inline double gauss(double mean, double stddev) {
   return dist(random_gen);
 }
 
+inline double gaussianDistance(const CartesianPoint& pt, const CartesianPoint& mean, const double* stddev) {
+  double scale_factor = 1 / (2 * M_PI * stddev[0] * stddev[1]);
+  double xx = square(pt.x - mean.x) / (2 * square(stddev[0]));
+  double yy = square(pt.y - mean.y) / (2 * square(stddev[1]));
+  return scale_factor * exp(-(xx + yy));
+}
+
 VehicleState VehicleState::addGaussianNoise(const double* stddev) const {
   CartesianPoint new_position;
   new_position.x = gauss(position.x, stddev[0]);
@@ -45,3 +52,7 @@ const Landmark& Map::findNearest(const CartesianPoint& point) const {
   }
   return landmarks[nearest];
 }
+
+double Observation::gaussianDistanceFrom(const CartesianPoint& mean, const double* stddev) const {
+  return ::gaussianDistance(position, mean, stddev);
+};

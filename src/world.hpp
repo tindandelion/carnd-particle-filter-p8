@@ -35,9 +35,12 @@ struct Observation {
   CartesianPoint position;
   
   Observation(const CartesianPoint& position): position(position) { }
+  
   Observation toMapCoordinates(const CartesianPoint& origin, double theta) const {
     return Observation(position.rotate(theta).translate(origin));
   }
+
+  double gaussianDistanceFrom(const CartesianPoint& mean, const double* stddev) const;
 };
 
 struct VehicleState {

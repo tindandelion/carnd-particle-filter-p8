@@ -14,10 +14,19 @@
 #include <sstream>
 #include <string>
 #include <iterator>
+#include <assert.h>
 
 #include "particle_filter.hpp"
 
 using namespace std;
+
+double totalWeight(const vector<Particle>& particles) {
+  double total = 0.0;
+  for (const Particle& p: particles) {
+    total += p.weight;
+  }
+  return total;
+}
 
 void ParticleFilter::init(double x, double y, double theta) {
   VehicleState init_state = VehicleState(CartesianPoint(x, y), theta);
@@ -39,7 +48,19 @@ void ParticleFilter::updateWeights(double sensor_range, const std::vector<Observ
   ObservationProcessor op(observations);
   for (Particle& p: particles) {
     op.convertToMapCoordinates(p.state);
-    p.weight = observation_model.calculateWeight(p.state, op.mapped());
+    op.associateWithLandmarks(map);
+    p.weight = op.calculateTotalWeight(observation_stddev);
+  }
+
+  double total = totalWeight(particles);
+  if (!(total > 0)) {
+    cout << "***** Total weight = 0" << endl;
+    for (const Observation& o: observations) {
+      cout << o.position.x << " " << o.position.y << endl;
+    }
+    cout << "----";
+    Particle& p = particles[0];
+    cout << p.state.position.x << " " << p.state.position.y << " " << p.state.theta << endl;
   }
 }
 
@@ -47,7 +68,11 @@ void ParticleFilter::resample() {
 	// TODO: Resample particles with replacement with probability proportional to their weight. 
 	// NOTE: You may find std::discrete_distribution helpful here.
 	//   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
-
+  double total = totalWeight(particles);
+  assert(total > 0);
+  for (Particle& p: particles) {
+    p.weight /= total;
+  }
 }
 
 string ParticleFilter::getAssociations(Particle best)

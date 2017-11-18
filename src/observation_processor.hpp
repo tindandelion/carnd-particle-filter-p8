@@ -9,11 +9,16 @@ using std::vector;
 class ObservationProcessor {
   const vector<Observation>& observations;
   vector<Observation> map_observations;
+  vector<Landmark> associations;
 public:
   ObservationProcessor(const vector<Observation>& observations): observations(observations) { }
 
   void convertToMapCoordinates(const VehicleState& state);
-  const vector<Observation>& mapped() const { return map_observations; } 
+  void associateWithLandmarks(const Map& map);
+  double calculateTotalWeight(const double* stddev);
+  
+  const vector<Observation>& mapped() const { return map_observations; }
+  const vector<Landmark>& assoc() const { return associations; }
 };
 
 #endif

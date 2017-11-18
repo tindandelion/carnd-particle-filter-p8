@@ -25,6 +25,42 @@ std::string hasData(std::string s) {
   return "";
 }
 
+void test() {
+  VehicleState state(CartesianPoint(4, 5), -M_PI/2);
+  vector<Observation> obs;
+
+  obs.push_back(CartesianPoint(2, 2));
+  obs.push_back(CartesianPoint(3, -2));
+  obs.push_back(CartesianPoint(0, -4));
+
+  ObservationProcessor op(obs);
+  op.convertToMapCoordinates(state);
+
+  Map map;
+  map.addLandmark(1, CartesianPoint(5, 3));
+  map.addLandmark(2, CartesianPoint(2, 1));
+  map.addLandmark(3, CartesianPoint(6, 1));
+  map.addLandmark(4, CartesianPoint(7, 4));
+  map.addLandmark(5, CartesianPoint(4, 7));
+
+  op.associateWithLandmarks(map);
+    
+
+  for (const Observation& o: op.mapped()) {
+    cout << "x = " << o.position.x << endl;
+    cout << "y = " << o.position.y << endl;
+    cout << "---" << endl;
+  }
+
+  for (const Landmark& lm: op.assoc()) {
+    cout << lm.id << " ";
+  }
+  cout << endl;
+
+  double stddev[] = { 0.3, 0.3 };
+  cout << "Total weight " << op.calculateTotalWeight(stddev) << endl; 
+}
+
 int main()
 {
   uWS::Hub h;
@@ -43,8 +79,10 @@ int main()
     return -1;
   }
 
+  test();
+
   // Create particle filter
-  ParticleFilter pf(10, map, sigma_pos, sigma_landmark);
+  ParticleFilter pf(1, map, sigma_pos, sigma_landmark);
 
   h.onMessage([&pf,&map,&delta_t,&sensor_range,&sigma_pos,&sigma_landmark](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
       // "42" at the start of the message means there's a websocket message event.
@@ -119,6 +157,7 @@ int main()
 	      }
 	      weight_sum += particles[i].weight;
 	    }
+	    cout << "weight sum " << weight_sum << endl;
 	    cout << "highest w " << highest_weight << endl;
 	    cout << "average w " << weight_sum/num_particles << endl;
 

@@ -1,16 +1,7 @@
-/*
- * particle_filter.h
- *
- * 2D particle filter class.
- *  Created on: Dec 12, 2016
- *      Author: Tiffany Huang
- */
-
 #ifndef PARTICLE_FILTER_H_
 #define PARTICLE_FILTER_H_
 
 #include "helper_functions.h"
-#include "models.hpp"
 #include "observation_processor.hpp"
 
 struct Particle {
@@ -36,7 +27,8 @@ class ParticleFilter {
   std::vector<double> weights;
 
   const double* motion_stddev;
-  ObservationModel observation_model;
+  const double* observation_stddev;
+  const Map& map;
 public:
 	
   // Set of current particles
@@ -45,10 +37,8 @@ public:
   ParticleFilter(int num_particles, const Map& map, double motion_stddev[], double observation_stddev[]):
     num_particles(num_particles),
     motion_stddev(motion_stddev),
-    observation_model(ObservationModel(map, observation_stddev)) {}
-
-  // Destructor
-  ~ParticleFilter() {}
+    observation_stddev(observation_stddev),
+    map(map) { }
 
   /**
    * init Initializes particle filter by initializing particles to Gaussian
