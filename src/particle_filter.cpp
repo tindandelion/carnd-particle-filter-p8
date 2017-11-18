@@ -20,12 +20,27 @@
 
 using namespace std;
 
+static default_random_engine random_gen;
+
 double totalWeight(const vector<Particle>& particles) {
   double total = 0.0;
   for (const Particle& p: particles) {
     total += p.weight;
   }
   return total;
+}
+
+void normalizeWeights(vector<Particle>& particles) {
+  double total = totalWeight(particles);
+  for (Particle& p: particles) {
+    p.weight /= total;
+  }
+}
+
+void collectWeights(const vector<Particle>& particles, vector<double>& weights) {
+  for (const Particle& p: particles) {
+    weights.push_back(p.weight);
+  }
 }
 
 void ParticleFilter::init(double x, double y, double theta) {
@@ -57,11 +72,19 @@ void ParticleFilter::resample() {
 	// TODO: Resample particles with replacement with probability proportional to their weight. 
 	// NOTE: You may find std::discrete_distribution helpful here.
 	//   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
-  double total = totalWeight(particles);
-  assert(total > 0);
-  for (Particle& p: particles) {
-    p.weight /= total;
+  vector<double> weights;
+  collectWeights(particles, weights);
+
+  discrete_distribution<> dist(weights.begin(), weights.end());
+  vector<Particle> new_particles;
+  
+  for (int i = 0; i < num_particles; i++) {
+    int index = dist(random_gen);
+    new_particles.push_back(particles[index]);
   }
+  
+  normalizeWeights(new_particles);
+  particles = new_particles;
 }
 
 string ParticleFilter::getAssociations(Particle best)
