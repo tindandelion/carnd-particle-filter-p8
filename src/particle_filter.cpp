@@ -51,17 +51,6 @@ void ParticleFilter::updateWeights(double sensor_range, const std::vector<Observ
     op.associateWithLandmarks(map);
     p.weight = op.calculateTotalWeight(observation_stddev);
   }
-
-  double total = totalWeight(particles);
-  if (!(total > 0)) {
-    cout << "***** Total weight = 0" << endl;
-    for (const Observation& o: observations) {
-      cout << o.position.x << " " << o.position.y << endl;
-    }
-    cout << "----";
-    Particle& p = particles[0];
-    cout << p.state.position.x << " " << p.state.position.y << " " << p.state.theta << endl;
-  }
 }
 
 void ParticleFilter::resample() {
