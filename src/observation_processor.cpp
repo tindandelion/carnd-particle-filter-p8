@@ -23,3 +23,19 @@ double ObservationProcessor::calculateTotalWeight(const double* stddev) {
   }
   return total;
 }
+
+void ObservationProcessor::dumpMapObservations(vector<double>& xx, vector<double>& yy) {
+  xx.clear();
+  yy.clear();
+  for (const Observation& o: map_observations) {
+    xx.push_back(o.position.x);
+    yy.push_back(o.position.y);
+  }
+}
+
+void ObservationProcessor::dumpAssociations(vector<int>& ids) {
+  ids.clear();
+  for (const Landmark& lm: associations) {
+    ids.push_back(lm.id);
+  }
+}

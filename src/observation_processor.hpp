@@ -16,6 +16,8 @@ public:
   void convertToMapCoordinates(const VehicleState& state);
   void associateWithLandmarks(const Map& map);
   double calculateTotalWeight(const double* stddev);
+  void dumpMapObservations(vector<double>& xx, vector<double>& yy);
+  void dumpAssociations(vector<int>& ids);
   
   const vector<Observation>& mapped() const { return map_observations; }
   const vector<Landmark>& assoc() const { return associations; }

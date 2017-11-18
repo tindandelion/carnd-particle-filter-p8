@@ -64,7 +64,10 @@ void ParticleFilter::updateWeights(double sensor_range, const std::vector<Observ
   for (Particle& p: particles) {
     op.convertToMapCoordinates(p.state);
     op.associateWithLandmarks(map);
+    
     p.weight = op.calculateTotalWeight(observation_stddev);
+    op.dumpMapObservations(p.sense_x, p.sense_y);
+    op.dumpAssociations(p.associations);
   }
 }
 
