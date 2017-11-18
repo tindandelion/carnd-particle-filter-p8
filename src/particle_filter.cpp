@@ -76,7 +76,7 @@ void ParticleFilter::resample() {
   collectWeights(particles, weights);
 
   discrete_distribution<> dist(weights.begin(), weights.end());
-  vector<Particle> new_particles;
+  vector<Particle> new_particles(num_particles);
   
   for (int i = 0; i < num_particles; i++) {
     int index = dist(random_gen);
