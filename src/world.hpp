@@ -16,10 +16,6 @@ struct CartesianPoint {
     return sqrt(square(x - other.x) + square(y - other.y));
   }
 
-  CartesianPoint translate(double dx, double dy) const {
-    return CartesianPoint(x + dx, y + dy);
-  }
-
   CartesianPoint translate(const CartesianPoint& origin) const {
     return CartesianPoint(x + origin.x, y + origin.y);
   }
@@ -48,10 +44,7 @@ struct VehicleState {
   double theta;
 
   VehicleState(const CartesianPoint& position, double yaw_angle): position(position), theta(yaw_angle) {}
-  VehicleState(double values[]): position(CartesianPoint(values[0], values[1])), theta(values[3]) {}
 
-  double x() const { return position.x; }
-  double y() const { return position.y; }
   VehicleState addGaussianNoise(const double* stddev) const;
   VehicleState move(double delta_t, double vel, double yaw_rate) const;
 };
