@@ -24,7 +24,6 @@ public:
 class ParticleFilter {
   bool is_initialized = false;
   int num_particles; 
-  std::vector<double> weights;
 public:
 	
   // Set of current particles
