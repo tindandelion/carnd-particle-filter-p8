@@ -25,20 +25,13 @@ class ParticleFilter {
   bool is_initialized = false;
   int num_particles; 
   std::vector<double> weights;
-
-  const double* motion_stddev;
-  const double* observation_stddev;
-  const Map& map;
 public:
 	
   // Set of current particles
   std::vector<Particle> particles;
 
-  ParticleFilter(int num_particles, const Map& map, double motion_stddev[], double observation_stddev[]):
-    num_particles(num_particles),
-    motion_stddev(motion_stddev),
-    observation_stddev(observation_stddev),
-    map(map) { }
+  ParticleFilter(int num_particles): num_particles(num_particles) { }
+
 
   /**
    * init Initializes particle filter by initializing particles to Gaussian
@@ -46,25 +39,32 @@ public:
    * @param x Initial x position [m] (simulated estimate from GPS)
    * @param y Initial y position [m]
    * @param theta Initial orientation [rad]
+   * @param std[] Array of dimension 3 [standard deviation of x [m], standard deviation of y [m]
+   *   standard deviation of yaw [rad]]
    */
-  void init(double x, double y, double theta);
+  void init(double x, double y, double theta, double std[]);
 
   /**
    * prediction Predicts the state for the next time step
    *   using the process model.
    * @param delta_t Time between time step t and t+1 in measurements [s]
+   * @param std_pos[] Array of dimension 3 [standard deviation of x [m], standard deviation of y [m]
+   *   standard deviation of yaw [rad]]
    * @param velocity Velocity of car from t to t+1 [m/s]
    * @param yaw_rate Yaw rate of car from t to t+1 [rad/s]
    */
-  void prediction(double delta_t, double velocity, double yaw_rate);
-	
+  void prediction(double delta_t, double std_pos[], double velocity, double yaw_rate);  
+
   /**
    * updateWeights Updates the weights for each particle based on the likelihood of the 
    *   observed measurements. 
    * @param sensor_range Range [m] of sensor
+   * @param std_landmark[] Array of dimension 2 [Landmark measurement uncertainty [x [m], y [m]]]
    * @param observations Vector of landmark observations
+   * @param map Map class containing map landmarks
    */
-  void updateWeights(double sensor_range, const std::vector<Observation> &observations);
+  void updateWeights(double sensor_range, double std_landmark[], const std::vector<Observation> &observations,
+		     const Map &map_landmarks);
 	
   /**
    * resample Resamples from the updated set of particles to form

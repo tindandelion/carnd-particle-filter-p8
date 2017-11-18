@@ -43,29 +43,30 @@ void collectWeights(const vector<Particle>& particles, vector<double>& weights) 
   }
 }
 
-void ParticleFilter::init(double x, double y, double theta) {
+void ParticleFilter::init(double x, double y, double theta, double std[]) {
   VehicleState init_state = VehicleState(CartesianPoint(x, y), theta);
   for (int i = 0; i < num_particles; i++) {
-    VehicleState state = init_state.addGaussianNoise(motion_stddev);
+    VehicleState state = init_state.addGaussianNoise(std);
     particles.push_back(Particle(state));
   }
   is_initialized = true;
 }
 
-void ParticleFilter::prediction(double delta_t, double velocity, double yaw_rate) {
+void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate) {
   for (Particle& p: particles) {
     VehicleState new_state = p.state.move(delta_t, velocity, yaw_rate);
-    p.state = new_state.addGaussianNoise(motion_stddev);
+    p.state = new_state.addGaussianNoise(std_pos);
   }
 }
 
-void ParticleFilter::updateWeights(double sensor_range, const std::vector<Observation> &observations) {
+void ParticleFilter::updateWeights(double sensor_range, double std_landmark[], const std::vector<Observation> &observations,
+				   const Map &map_landmarks) {
   ObservationProcessor op(observations);
   for (Particle& p: particles) {
     op.convertToMapCoordinates(p.state);
-    op.associateWithLandmarks(map);
+    op.associateWithLandmarks(map_landmarks);
     
-    p.weight = op.calculateTotalWeight(observation_stddev);
+    p.weight = op.calculateTotalWeight(std_landmark);
     op.dumpMapObservations(p.sense_x, p.sense_y);
     op.dumpAssociations(p.associations);
   }
