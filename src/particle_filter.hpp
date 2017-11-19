@@ -16,9 +16,9 @@ public:
   Particle(): state(VehicleState(CartesianPoint(0, 0), 0)), weight(0) {}
   Particle(const VehicleState& init_state): state(init_state), weight(1.0) {};
   
-  double x() const { return state.position.x; }
-  double y() const { return state.position.y; }
-  double theta() const { return state.theta; }
+  double x() const { return state.position().x; }
+  double y() const { return state.position().y; }
+  double theta() const { return state.yaw_angle(); }
 };
 
 class ParticleFilter {

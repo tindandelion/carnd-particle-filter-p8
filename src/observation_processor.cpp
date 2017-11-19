@@ -3,14 +3,14 @@
 void ObservationProcessor::convertToMapCoordinates(const VehicleState& state) {
   map_observations.clear();
   for (const Observation& o: observations) {
-    map_observations.push_back(o.toMapCoordinates(state.position, state.theta));
+    map_observations.push_back(o.toMapCoordinates(state.position(), state.yaw_angle()));
   }
 }
 
 void ObservationProcessor::associateWithLandmarks(const Map& map) {
   associations.clear();
   for (const Observation& o: map_observations) {
-    associations.push_back(map.findNearest(o.position));
+    associations.push_back(map.findNearest(o.position()));
   }
 }
 
@@ -28,8 +28,8 @@ void ObservationProcessor::dumpMapObservations(vector<double>& xx, vector<double
   xx.clear();
   yy.clear();
   for (const Observation& o: map_observations) {
-    xx.push_back(o.position.x);
-    yy.push_back(o.position.y);
+    xx.push_back(o.position().x);
+    yy.push_back(o.position().y);
   }
 }
 

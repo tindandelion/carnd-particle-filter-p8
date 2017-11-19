@@ -17,25 +17,25 @@ inline double gaussianDistance(const CartesianPoint& pt, const CartesianPoint& m
 
 VehicleState VehicleState::addGaussianNoise(const double* stddev) const {
   CartesianPoint new_position;
-  new_position.x = gauss(position.x, stddev[0]);
-  new_position.y = gauss(position.y, stddev[1]);
-  double new_theta = gauss(theta, stddev[2]);
+  new_position.x = gauss(_position.x, stddev[0]);
+  new_position.y = gauss(_position.y, stddev[1]);
+  double new_theta = gauss(_theta, stddev[2]);
   return VehicleState(new_position, new_theta);
 }
 
 VehicleState VehicleState::move(double delta_t, double vel, double yaw_rate) const {
   CartesianPoint offset;
-  double new_theta = theta + yaw_rate*delta_t;
+  double new_theta = _theta + yaw_rate*delta_t;
   
   if (fabs(yaw_rate) < 1e-4) {
-    offset.x = vel * cos(theta) * delta_t;
-    offset.y = vel * sin(theta) * delta_t;
+    offset.x = vel * cos(_theta) * delta_t;
+    offset.y = vel * sin(_theta) * delta_t;
   } else {
-    offset.x = vel/yaw_rate * (sin(new_theta) - sin(theta));
-    offset.y = vel/yaw_rate * (-cos(new_theta) + cos(theta));
+    offset.x = vel/yaw_rate * (sin(new_theta) - sin(_theta));
+    offset.y = vel/yaw_rate * (-cos(new_theta) + cos(_theta));
   }
 
-  CartesianPoint new_position = position.translate(offset);
+  CartesianPoint new_position = _position.translate(offset);
   return VehicleState(new_position, new_theta);  
 };
 
@@ -54,5 +54,5 @@ const Landmark& Map::findNearest(const CartesianPoint& point) const {
 }
 
 double Observation::gaussianDistanceFrom(const CartesianPoint& mean, const double* stddev) const {
-  return ::gaussianDistance(position, mean, stddev);
+  return ::gaussianDistance(_position, mean, stddev);
 };

@@ -27,24 +27,29 @@ struct CartesianPoint {
   }
 };
 
-struct Observation {
-  CartesianPoint position;
+class Observation {
+  CartesianPoint _position;
   
-  Observation(const CartesianPoint& position): position(position) { }
+public: 
+  Observation(const CartesianPoint& position): _position(position) { }
   
   Observation toMapCoordinates(const CartesianPoint& origin, double theta) const {
-    return Observation(position.rotate(theta).translate(origin));
+    return Observation(_position.rotate(theta).translate(origin));
   }
-
+  const CartesianPoint& position() const { return _position; }
   double gaussianDistanceFrom(const CartesianPoint& mean, const double* stddev) const;
 };
 
-struct VehicleState {
-  CartesianPoint position;
-  double theta;
+class VehicleState {
+  CartesianPoint _position;
+  double _theta;
 
-  VehicleState(const CartesianPoint& position, double yaw_angle): position(position), theta(yaw_angle) {}
+public:
+  VehicleState(const CartesianPoint& position, double yaw_angle): _position(position), _theta(yaw_angle) {}
 
+  const CartesianPoint& position() const { return _position; }
+  double yaw_angle() const { return _theta; }
+  
   VehicleState addGaussianNoise(const double* stddev) const;
   VehicleState move(double delta_t, double vel, double yaw_rate) const;
 };
