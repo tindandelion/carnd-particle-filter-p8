@@ -32,7 +32,7 @@ neighborhood. Landmark's coordinates come in local vehicle coordinate system (X
 axis pointing ahead of the vehicle, Y axis pointing to the left). This class can
 translate the observation into the global (map) coordinates. It can also
 calculate the probability of seeing the observation, assuming Gaussian
-distribution of observations around a true landmark. 
+distribution of observations around the true landmark. 
 
 ### `VehicleState`
 
