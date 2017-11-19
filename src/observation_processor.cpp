@@ -19,7 +19,7 @@ double ObservationProcessor::calculateTotalWeight(const double* stddev) {
   for (int i = 0; i < map_observations.size(); i++) {
     const Observation& o = map_observations[i];
     const Landmark& lm = associations[i];
-    total *= o.gaussianDistanceFrom(lm.position, stddev);
+    total *= o.gaussianDistanceFrom(lm.position(), stddev);
   }
   return total;
 }
@@ -36,6 +36,6 @@ void ObservationProcessor::dumpMapObservations(vector<double>& xx, vector<double
 void ObservationProcessor::dumpAssociations(vector<int>& ids) {
   ids.clear();
   for (const Landmark& lm: associations) {
-    ids.push_back(lm.id);
+    ids.push_back(lm.id());
   }
 }

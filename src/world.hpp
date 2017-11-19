@@ -50,10 +50,13 @@ struct VehicleState {
 };
 
 class Landmark {
-  int id;
-  CartesianPoint position;
+  int _id;
+  CartesianPoint _position;
 public:
-  Landmark(int id, const CartesianPoint& position): id(id), position(position) {}
+  Landmark(int id, const CartesianPoint& position): _id(id), _position(position) {}
+  
+  int id() const { return _id; }
+  const CartesianPoint& position() const { return _position; }
 };
 
 class Map {
