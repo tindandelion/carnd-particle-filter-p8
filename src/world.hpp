@@ -49,10 +49,10 @@ struct VehicleState {
   VehicleState move(double delta_t, double vel, double yaw_rate) const;
 };
 
-struct Landmark {
+class Landmark {
   int id;
   CartesianPoint position;
-
+public:
   Landmark(int id, const CartesianPoint& position): id(id), position(position) {}
 };
 
